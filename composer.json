@@ -1,0 +1,15 @@
+{
+    "name": "iamgold/gmphp",
+    "description": "This is a lightweight library for manipulating graphics magick commands in PHP. ",
+    "keywords": ["iamgold", "graphicsmagick", "command", "PHP", "image processing"],
+    "type": "library",
+    "support": {
+        "source": "https://gihub.com/iamgold/gmphp"
+    },
+    "require": {
+        "php": ">=7.0.4"
+    },
+    "autoload": {
+        "psr-4": {"iamgold\\gmphp\\": "src/"}
+    }
+}
