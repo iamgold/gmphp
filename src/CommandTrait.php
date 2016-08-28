@@ -14,6 +14,57 @@ Trait CommandTrait
     protected $options = [];
 
     /**
+     * @var string $commandReg
+     */
+    private $commandReg = '/^(convert|composite|mogrify)$/i';
+
+    /**
+     * @var string SEPARATOR
+     */
+    private $separator = '[sep]';
+
+    /**
+     * Begin command
+     *
+     * @param string $name
+     * @return $this
+     * @throws InvalidArgumentException
+     */
+    public function beginCommand($name)
+    {
+        if (preg_match($this->commandReg, $name)==false)
+            throw new InvalidArgumentException("This command name ($name) is not support." . __CLASS__ . ':' . __METHOD__, 501);
+
+        if (count($this->options)>0)
+            $this->options[] = $this->separator;
+
+        $this->options[] = strtolower($name);
+
+        return $this;
+    }
+
+    /**
+     * Building command by options
+     *
+     * @return string
+     */
+    public function build()
+    {
+        $count = count($this->options);
+        $command = '';
+        for($i=0; $i<$count; $i++) {
+            $option = $this->options[$i];
+
+            if ($option==$this->separator)
+                $command .= "\\\n";
+
+            $command .= ' ' . $option;
+        }
+
+        return $command;
+    }
+
+    /**
      * Set option
      *
      * @see http://www.graphicsmagick.org/GraphicsMagick.html
@@ -21,17 +72,13 @@ Trait CommandTrait
      * @param string $value
      * @return $this
      */
-    public function setOption(string $key, $value='')
+    public function addOption(string $key, $value='')
     {
         $key = trim($key);
         if (empty($key))
             throw InvalidOptionException("Invalid option key" . __CLASS__ . ':' . __METHOD__, 500);
 
-        $option = '-' . strtolower(trim($key));
-        if (!empty($value))
-            $option .= ' ' . $value;
-
-        $this->options[] = $option;
+        $this->options[] = $this->normalizeOption($key, $value);
         return $this;
     }
 
@@ -50,10 +97,32 @@ Trait CommandTrait
      *
      * @return $this
      */
-    public function resetOptions()
+    public function reset()
     {
         $this->options = [];
         return $this;
+    }
+
+    /**
+     * Set source file
+     *
+     * @param string $filepath
+     * @return $this
+     */
+    public function setSrcFile($filepath)
+    {
+        return $this->addFile($filepath);
+    }
+
+    /**
+     * Set destination file
+     *
+     * @param string $filepath
+     * @return $this
+     */
+    public function setDestFile($filepath)
+    {
+        return $this->addFile($filepath);
     }
 
     /**
@@ -62,9 +131,25 @@ Trait CommandTrait
      * @param string $file
      * @return $this
      */
-    public function setFile($file)
+    public function addFile($file)
     {
-        $this->option[] = trim($file);
+        $this->options[] = trim($file);
         return $this;
+    }
+
+    /**
+     * Normalize option
+     *
+     * @param string $key
+     * @param string $value
+     * @return string
+     */
+    protected function normalizeOption($key, $value)
+    {
+        $option = '-' . strtolower(trim($key));
+        if (!empty($value))
+            $option .= ' ' . $value;
+
+        return $option;
     }
 }
