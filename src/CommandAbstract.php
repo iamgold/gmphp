@@ -57,4 +57,9 @@ abstract class CommandAbstract implements CommandInterface
      * @return string
      */
     abstract protected function prepareCommand();
+
+    /**
+     * Init
+     */
+    abstract protected function
 }

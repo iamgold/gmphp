@@ -24,26 +24,6 @@ Trait CommandTrait
     private $separator = '[sep]';
 
     /**
-     * Begin command
-     *
-     * @param string $name
-     * @return $this
-     * @throws InvalidArgumentException
-     */
-    public function beginCommand($name)
-    {
-        if (preg_match($this->commandReg, $name)==false)
-            throw new InvalidArgumentException("This command name ($name) is not support." . __CLASS__ . ':' . __METHOD__, 501);
-
-        if (count($this->options)>0)
-            $this->options[] = $this->separator;
-
-        $this->options[] = strtolower($name);
-
-        return $this;
-    }
-
-    /**
      * Building command by options
      *
      * @return string
@@ -93,6 +73,16 @@ Trait CommandTrait
     }
 
     /**
+     * Add separator
+     *
+     * @return $this
+     */
+    public function addSeparator()
+    {
+        $this->options[] = $this->separator;
+    }
+
+    /**
      * Reset options
      *
      * @return $this
@@ -135,6 +125,28 @@ Trait CommandTrait
     {
         $this->options[] = trim($file);
         return $this;
+    }
+
+    /**
+     * Validate command name
+     *
+     * @param string $name
+     * @return bool
+     */
+    protected function validateCommandName($name)
+    {
+        return (preg_match($this->commandReg, $name)!=false);
+    }
+
+    /**
+     * Normalize command name
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function normalizeName(string $name)
+    {
+        return strtolower(trim($name));
     }
 
     /**

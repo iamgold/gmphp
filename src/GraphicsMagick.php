@@ -38,6 +38,24 @@ class GraphicsMagick
     }
 
     /**
+     * Begin command
+     *
+     * @param string $name
+     * @return $this
+     * @throws InvalidArgumentException
+     */
+    public function beginCommand($name)
+    {
+        if (preg_match($this->commandReg, $name)==false)
+            throw new InvalidArgumentException("This command name ($name) is not support." . __CLASS__ . ':' . __METHOD__, 501);
+        else
+            $name = strtolower($name);
+
+        $this->options = [$name];
+        return $this;
+    }
+
+    /**
      * Create commmand
      *
      * @param iamgold\gmphp\Command $command
