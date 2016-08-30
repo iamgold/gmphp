@@ -11,7 +11,7 @@ class ConvertCommand extends Command
     /**
      * inheritdoc
      */
-    protected $commandName = 'convert';
+    public $name = 'convert';
 
     /**
      * Resize an image
@@ -26,5 +26,15 @@ class ConvertCommand extends Command
      *      match: ^ resize the image based on the smallest fitting dimension
      *      percent: %
      */
-    public function resize(int $width, int $height, $fit=null,
+    public function resize(int $width, int $height, $fit='')
+    {
+        if (!empty($fit) && preg_match('/^[\!\>\<\^%]{1}$/', $fit)===false) {
+            throw new InvalidArgumentException("Not support argument of fit ($fit)", 500);
+        }
+
+        $value = sprintf('%sx%s%s', $width, $height, $fit);
+        $this->addOption('resize', $value);
+
+        return $this;
+    }
 }

@@ -16,33 +16,7 @@ Trait CommandTrait
     /**
      * @var string $commandReg
      */
-    private $commandReg = '/^(convert|composite|mogrify)$/i';
-
-    /**
-     * @var string SEPARATOR
-     */
-    private $separator = '[sep]';
-
-    /**
-     * Building command by options
-     *
-     * @return string
-     */
-    public function build()
-    {
-        $count = count($this->options);
-        $command = '';
-        for($i=0; $i<$count; $i++) {
-            $option = $this->options[$i];
-
-            if ($option==$this->separator)
-                $command .= "\\\n";
-
-            $command .= ' ' . $option;
-        }
-
-        return $command;
-    }
+    public $commandReg = '/^(convert|composite|mogrify)$/';
 
     /**
      * Set option
@@ -50,15 +24,25 @@ Trait CommandTrait
      * @see http://www.graphicsmagick.org/GraphicsMagick.html
      * @param string $key
      * @param string $value
+     * @param bool $autoDash means automatically prepending dash to key.
      * @return $this
      */
-    public function addOption(string $key, $value='')
+    public function addOption(string $key, $value='', $autoDash=true)
     {
-        $key = trim($key);
+        $key = strtolower(trim($key));
         if (empty($key))
-            throw InvalidOptionException("Invalid option key" . __CLASS__ . ':' . __METHOD__, 500);
+            throw new InvalidOptionException("Invalid option key. " . __CLASS__ . ':' . __METHOD__, 500);
 
-        $this->options[] = $this->normalizeOption($key, $value);
+        $option = $key;
+        if ($autoDash)
+            $option = '-' . $key;
+
+        if (!empty($value)) {
+            $value = (string) $value;
+            $option .= ' ' . $value;
+        }
+
+        $this->options[] = $option;
         return $this;
     }
 
@@ -70,16 +54,6 @@ Trait CommandTrait
     public function getOptions()
     {
         return $this->options;
-    }
-
-    /**
-     * Add separator
-     *
-     * @return $this
-     */
-    public function addSeparator()
-    {
-        $this->options[] = $this->separator;
     }
 
     /**
@@ -128,6 +102,18 @@ Trait CommandTrait
     }
 
     /**
+     * Set command name regular expression
+     *
+     * @param srtring $regularExpression
+     * @return $this
+     */
+    public function setCommandRegularExpression(string $regularExpression)
+    {
+        $this->commandReg = $regularExpression;
+        return $this;
+    }
+
+    /**
      * Validate command name
      *
      * @param string $name
@@ -136,32 +122,5 @@ Trait CommandTrait
     protected function validateCommandName($name)
     {
         return (preg_match($this->commandReg, $name)!=false);
-    }
-
-    /**
-     * Normalize command name
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function normalizeName(string $name)
-    {
-        return strtolower(trim($name));
-    }
-
-    /**
-     * Normalize option
-     *
-     * @param string $key
-     * @param string $value
-     * @return string
-     */
-    protected function normalizeOption($key, $value)
-    {
-        $option = '-' . strtolower(trim($key));
-        if (!empty($value))
-            $option .= ' ' . $value;
-
-        return $option;
     }
 }

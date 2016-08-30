@@ -10,11 +10,6 @@ namespace iamgold\gmphp;
 class GraphicsMagick
 {
     /**
-     * use Command features
-     */
-    use CommandTrait;
-
-    /**
      * @var string $binary abslute path of binary command
      */
     public $bin = '/usr/bin/gm';
@@ -38,36 +33,19 @@ class GraphicsMagick
     }
 
     /**
-     * Begin command
+     * create command
      *
      * @param string $name
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function beginCommand($name)
+    public function createCommand(string $name)
     {
-        if (preg_match($this->commandReg, $name)==false)
-            throw new InvalidArgumentException("This command name ($name) is not support." . __CLASS__ . ':' . __METHOD__, 501);
-        else
-            $name = strtolower($name);
+        $className = '\\iamgold\\gmphp\\' . ucfirst($name) . 'Command';
+        if (!class_exists($className))
+            throw new \Exception("Unknown class ($className). " . __CLASS__ . ':' . __METHOD__, 500);
 
-        $this->options = [$name];
-        return $this;
-    }
-
-    /**
-     * Create commmand
-     *
-     * @param iamgold\gmphp\Command $command
-     * @return string
-     */
-    public function createCommand($command=null)
-    {
-        $rawCommand = ($command instanceof Command)
-                            ? $command->buildCommand()
-                                : $this->build();
-
-        return $rawCommand;
+        return new $className;
     }
 
     /**
@@ -97,7 +75,6 @@ class GraphicsMagick
     public function setDebug($mode)
     {
         $this->debug = ($mode===true) ? true : false;
-
         return $this;
     }
 }

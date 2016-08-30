@@ -7,59 +7,59 @@ namespace iamgold\gmphp;
  * and properties.
  */
 
-abstract class CommandAbstract implements CommandInterface
+abstract class CommandAbstract
 {
     /**
-     * @var string $commandName
+     * Use command trait
      */
-    protected $commandName;
+    use CommandTrait;
 
     /**
-     * @var iamgold\gmphp\Command $previousCommand
+     * @var string $name means command name
      */
-    private $command = null;
+    public $name;
+
+    /**
+     * @var GraphicsMagick $gm
+     */
+    public $gm;
 
     /**
      * Construct
      *
-     * @param mixed
+     * @param GraphicsMagick|null $gm
      */
-    public function __construct($command=null)
+    public function __construct($gm=null)
     {
-        if ($command!==null) {
-            if ($command instanceof \iamgold\gmphp\Command)
-                $this->command = &$command;
+        if ($gm!==null) {
+            if ($gm instanceof GraphicsMagick)
+                $this->gm = &$gm;
             else
-                throw new InvalidArgumentException("Invalid class of command. " . __CLASS__ . ':' . __METHOD__, 500);
+                throw new InvalidArgumentException("Invalid class of GraphicsMagick. " . __CLASS__ . ':' . __METHOD__, 500);
         }
 
-        if ($this->commandName===null)
-            throw new InvalidPropertyException("The property of commandName undefined. " . __CLASS__ . ':' . __METHOD__, 501);
+        if (!$this->validateCommandName($this->name)) {
+            throw new InvalidPropertyException("Invalid command name ({$this->name}). " . __CLASS__ . ':' . __METHOD__, 500);
+        }
     }
 
     /**
-     * Build command
+     * Get command name
      *
      * @return string
      */
-    public function buildCommand()
+    public function getName()
     {
-        $command = $this->prepareCommand();
-        if ($this->command===null)
-            return $command;
-
-        return $this->command->buildCommand() . "\\\n" . $command;
+        return $this->name;
     }
 
     /**
-     * Prepare command
+     * Get raw command by parsing options
      *
      * @return string
      */
-    abstract protected function prepareCommand();
-
-    /**
-     * Init
-     */
-    abstract protected function
+    public function getRawCommand()
+    {
+        return $this->name . ' ' . implode(' ', $this->options);
+    }
 }
