@@ -16,7 +16,61 @@ class ConvertCommand extends Command
     public $name = 'convert';
 
     /**
-     * Resize an image
+     * Resize an image using resize algorithm
+     */
+    public function resize(int $width, int $height, $fit='', $offset='')
+    {
+        $this->resizeImage('resize', $width, $height, $fit, $offset);
+        return $this;
+    }
+
+    /**
+     * Create an thumbnail image using thumbnail algorithm
+     */
+    public function thumbnail(int $width, int $height, $fit='', $offset='')
+    {
+        $this->resizeImage('thumbnail', $width, $height, $fit, $offset);
+        return $this;
+    }
+
+    /**
+     * Scale an image using scale algorithm
+     */
+    public function scale(int $width, int $height, $fit='', $offset='')
+    {
+        $this->resizeImage('scale', $width, $height, $fit, $offset);
+        return $this;
+    }
+
+    /**
+     * Resize an image using sample algorithm
+     */
+    public function sample(int $width, int $height, $fit='', $offset='')
+    {
+        $this->resizeImage('sample', $width, $height, $fit, $offset);
+        return $this;
+    }
+
+    /**
+     * Crop an image
+     */
+    public function crop(int $width, int $height, $fit='', $offset='')
+    {
+        $this->resizeImage('crop', $width, $height, $fit, $offset);
+        return $this;
+    }
+
+    /**
+     * Crop an image using extent algorithm
+     */
+    public function extent(int $width, int $height, $fit='', $offset='')
+    {
+        $this->resizeImage('extent', $width, $height, $fit, $offset);
+        return $this;
+    }
+
+    /**
+     * Resize or crop an image
      *
      * @param string $algorithm values: resize, thumbnail, scale, sample, crop, extent
      * @param int $width
@@ -33,7 +87,7 @@ class ConvertCommand extends Command
      * @since 1.1.1
      * @return $this
      */
-    public function resizeImage(string $algorithm, int $width, int $height, $fit='', $offset='')
+    protected function resizeImage(string $algorithm, int $width, int $height, $fit='', $offset='')
     {
         if (preg_match('/^(resize|thumbnail|scale|sample|crop|extent)$/', $algorithm)==false)
             throw new InvalidArgumentException("Not support argument of algorithm ($algorithm). " . __CLASS__ . ':' . __METHOD__, 500);
