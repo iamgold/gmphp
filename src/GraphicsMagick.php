@@ -20,6 +20,11 @@ class GraphicsMagick
     public $debug = false;
 
     /**
+     * @var string $result
+     */
+    public $result = '';
+
+    /**
      * Construct
      *
      * @param array $config inlucdes all custom options
@@ -52,19 +57,17 @@ class GraphicsMagick
      * Exceute a command string
      *
      * @param string $command
-     * @param string $result call by reference
      * @return bool
      */
-    public function execute(string $command, &$result)
+    public function execute(string $command)
     {
-        $cmd = $this->bin . ' ' . $command;
+        $cmd = $this->bin . ' ' . $command . ' 2>&1';
 
         if ($this->debug)
             echo "\n===== Run command =====\n  $cmd\n========= end =========\n";
 
-        $result = shell_exec($cmd);
-
-        return (empty($result));
+        $this->result = shell_exec($cmd);
+        return (empty($this->result));
     }
 
     /**
@@ -76,5 +79,15 @@ class GraphicsMagick
     {
         $this->debug = ($mode===true) ? true : false;
         return $this;
+    }
+
+    /**
+     * Get executed result
+     *
+     * @return string
+     */
+    public function getResult()
+    {
+        return $this->result;
     }
 }

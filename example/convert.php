@@ -23,20 +23,21 @@ $command = $gm->createCommand('convert')
               ->getRawCommand();
 
 // execute resize command
-if ($gm->execute($command, $result)) {
+if ($gm->execute($command)) {
     echo "\n execute ok \n";
 } else {
-    echo "\n execute fail \n result: \n $result \n";
+    echo "\n execute fail \n result: \n " . $gm->getResult() . " \n";
 }
 
 $command = (new iamgold\gmphp\ConvertCommand)->setSrcFile($src)
-                                             ->resize(100, 100, '!')
-                                             ->setDestFile($dest.'resize.jpg')
+                                             ->resize(100, 100, '>')
+                                             ->crop(50, 50)
+                                             ->setDestFile($dest.'_resize.jpg')
                                              ->getRawCommand();
 
 // execute resize command
-if ($gm->execute($command, $result)) {
+if ($gm->execute($command)) {
     echo "\n execute ok \n";
 } else {
-    echo "\n execute fail \n result: \n $result \n";
+    echo "\n execute fail \n result: \n " . $gm->getResult() . " \n";
 }

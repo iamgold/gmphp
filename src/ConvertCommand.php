@@ -94,15 +94,26 @@ class ConvertCommand extends Command
 
         if (!$this->validateFit($fit)) {
             throw new InvalidArgumentException("Not support argument of fit ($fit). " . __CLASS__ . ':' . __METHOD__, 501);
+        } else {
+            if (!empty($fit) && ($fit=='<' || $fit=='>'))
+                $fit = '\\' . $fit;
         }
 
         if (!$this->validateOffset($offset)) {
             throw new InvalidArgumentException("Not support argument of offset ($offset). " . __CLASS__ . ':' . __METHOD__, 502);
         }
 
-        $value = sprintf('%sx%s%s%s', $width, $height, $offset, $fit);
-        $this->addOption($algorithm, trim($value));
+        if ($fit==='%') {
+            if ($width>0 && $height>0)
+                throw new InvalidArgumentException("Just setting an value of width or height when the fit mode is (%)." . __CLASS__ . ':' . __METHOD__, 503);
 
+            $percent = ($width>0) ? $width : $height;
+            $value = $percent . $fit;
+        } else {
+            $value = sprintf('%sx%s%s%s', ($width>0)?$width:'', ($height>0)?$height:'', $offset, $fit);
+        }
+
+        $this->addOption($algorithm, trim($value));
         return $this;
     }
 
