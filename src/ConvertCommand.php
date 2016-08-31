@@ -20,11 +20,11 @@ class ConvertCommand extends Command
      * @param int $height
      * @param string $fit
      * values:
-     *      force: !
-     *      lt: > must escaping string ex: \>
-     *      mt: < must escaping string ex: \<
-     *      match: ^ resize the image based on the smallest fitting dimension
-     *      percent: %
+     *      !: force size
+     *      >: less than original size and must escaping string ex: \>
+     *      <: more than original size and must escaping string ex: \<
+     *      ^: match, resize the image based on the smallest fitting dimension
+     *      %: resize by percent
      */
     public function resize(int $width, int $height, $fit='')
     {
