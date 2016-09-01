@@ -16,6 +16,21 @@ class ConvertCommand extends Command
     public $name = 'convert';
 
     /**
+     * Set gravity option
+     *
+     * @param string $gravity
+     * @return $this
+     */
+    public function gravity(string $gravity)
+    {
+        if (preg_match('/^(NorthWest|North|NorthEast|West|Center|East|SouthWest|South|SouthEast)$/', $gravity)==false)
+            $gravity = 'center';
+
+        $this->addOption('gravity', $gravity);
+        return $this;
+    }
+
+    /**
      * Set quality option
      *
      * @param int $quality
