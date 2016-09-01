@@ -16,6 +16,27 @@ class ConvertCommand extends Command
     public $name = 'convert';
 
     /**
+     * Set quality option
+     *
+     * @param int $quality
+     * @param bool $isPNG
+     * @return $this
+     */
+    public function quality(int $quality, $isPNG=false)
+    {
+        if ($isPNG) {
+            if ($quality<1)
+                $quality = 1;
+
+            if ($quality>=10)
+                $quality = round($quality/10);
+        }
+
+        $this->addOption('quality', $quality);
+        return $this;
+    }
+
+    /**
      * Resize an image using resize algorithm
      */
     public function resize(int $width, int $height, $fit='', $offset='')
