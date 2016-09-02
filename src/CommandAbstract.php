@@ -35,11 +35,11 @@ abstract class CommandAbstract
             if ($gm instanceof GraphicsMagick)
                 $this->gm = &$gm;
             else
-                throw new InvalidArgumentException("Invalid class of GraphicsMagick. " . __CLASS__ . ':' . __METHOD__, 500);
+                throw new InvalidArgumentException("Invalid class of GraphicsMagick. " . __METHOD__, 500);
         }
 
         if (!$this->validateCommandName($this->name)) {
-            throw new InvalidPropertyException("Invalid command name ({$this->name}). " . __CLASS__ . ':' . __METHOD__, 500);
+            throw new InvalidPropertyException("Invalid command name ({$this->name}). " . __METHOD__, 501);
         }
     }
 

@@ -126,22 +126,22 @@ class ConvertCommand extends Command
     protected function resizeImage(string $algorithm, int $width, int $height, $fit='', $offset='')
     {
         if (preg_match('/^(resize|thumbnail|scale|sample|crop|extent)$/', $algorithm)==false)
-            throw new InvalidArgumentException("Not support argument of algorithm ($algorithm). " . __CLASS__ . ':' . __METHOD__, 500);
+            throw new InvalidArgumentException("Not support argument of algorithm ($algorithm). " . __METHOD__, 500);
 
         if (!$this->validateFit($fit)) {
-            throw new InvalidArgumentException("Not support argument of fit ($fit). " . __CLASS__ . ':' . __METHOD__, 501);
+            throw new InvalidArgumentException("Not support argument of fit ($fit). " . __METHOD__, 501);
         } else {
             if (!empty($fit) && ($fit=='<' || $fit=='>'))
                 $fit = '\\' . $fit;
         }
 
         if (!$this->validateOffset($offset)) {
-            throw new InvalidArgumentException("Not support argument of offset ($offset). " . __CLASS__ . ':' . __METHOD__, 502);
+            throw new InvalidArgumentException("Not support argument of offset ($offset). " . __METHOD__, 502);
         }
 
         if ($fit==='%') {
             if ($width>0 && $height>0)
-                throw new InvalidArgumentException("Just setting an value of width or height when the fit mode is (%)." . __CLASS__ . ':' . __METHOD__, 503);
+                throw new InvalidArgumentException("Just setting an value of width or height when the fit mode is (%)." . __METHOD__, 503);
 
             $percent = ($width>0) ? $width : $height;
             $value = $percent . $fit;
@@ -165,7 +165,7 @@ class ConvertCommand extends Command
         if (empty($fit))
             return true;
 
-        return (preg_match('/^[\!\>\<\^%]{1}$/', $fit)!=false);
+        return (preg_match('/^[\!\>\<\^%@]{1}$/', $fit)!=false);
     }
 
     /**

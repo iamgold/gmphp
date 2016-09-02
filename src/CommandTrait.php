@@ -31,7 +31,7 @@ Trait CommandTrait
     {
         $key = strtolower(trim($key));
         if (empty($key))
-            throw new InvalidOptionException("Invalid option key. " . __CLASS__ . ':' . __METHOD__, 500);
+            throw new InvalidOptionException("Invalid option key. " . __METHOD__, 500);
 
         $option = $key;
         if ($autoDash)

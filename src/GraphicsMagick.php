@@ -48,7 +48,7 @@ class GraphicsMagick
     {
         $className = '\\iamgold\\gmphp\\' . ucfirst($name) . 'Command';
         if (!class_exists($className))
-            throw new \Exception("Unknown class ($className). " . __CLASS__ . ':' . __METHOD__, 500);
+            throw new \Exception("Unknown class ($className). " . __METHOD__, 500);
 
         return new $className;
     }
